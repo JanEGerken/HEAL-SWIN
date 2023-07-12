@@ -1,0 +1,14 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:21.02-py3
+
+%files
+    requirements.txt
+
+%post
+    # To force pytorch3d to build with CUDA support
+    export FORCE_CUDA=1
+
+    pip3 install -r requirements.txt
+
+    apt-get update
+    apt-get install -y sqlite3

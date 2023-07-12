@@ -1,0 +1,25 @@
+# python-related
+__pycache__/
+*.pyc
+**/cache*
+**/.eggs*
+*.egg-info
+*.ipynb_checkpoints/
+lightning_logs/
+
+# repo specific
+datasets
+mlruns
+archive
+slurm/slurm*
+containers/*.sif
+containers/J_dense_0-278.npy
+mlp_cache
+compute_environment/current_environment.py
+layer_visualizations
+equivariance_tests
+
+# zenseact-related
+zenseact/*
+!zenseact/__init__.py
+!zenseact/README.md
