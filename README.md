@@ -88,15 +88,26 @@ The `test-repo` task starts pytest and runs the tests inside `heal_swin/testing`
 
 HEAL-SWIN was introduced in
 
-XXX ArXiv reference here XXX
+O. Carlsson, J. E. Gerken, H. Linander, H. Spieß, F. Ohlsson, C. Petersson, and D. Persson, “HEAL-SWIN: A Vision Transformer On The Sphere,” 2023. [arXiv:2307.07313](http://arxiv.org/abs/2307.07313)
 
 If you use this code, please cite
 ```
-BibTeX reference here
+@article{carlsson2023,
+  title = {{{HEAL-SWIN}}: {{A Vision Transformer On The Sphere}}},
+  shorttitle = {{{HEAL-SWIN}}},
+  author = {Carlsson, Oscar and Gerken, Jan E. and Linander, Hampus and Spie{\ss}, Heiner and Ohlsson, Fredrik and Petersson, Christoffer and Persson, Daniel},
+  year = {2023},
+  month = jul,
+  number = {arXiv:2307.07313},
+  eprint = {2307.07313},
+  primaryclass = {cs},
+  publisher = {{arXiv}},
+  archiveprefix = {arxiv},
+}
 ```
 
 
-[^1]: XXX ArXiv reference here XXX
+[^1]: O. Carlsson, J. E. Gerken, H. Linander, H. Spieß, F. Ohlsson, C. Petersson, and D. Persson, “HEAL-SWIN: A Vision Transformer On The Sphere,” 2023. [arXiv:2307.07313](http://arxiv.org/abs/2307.07313).
 
 [^2]: H. Cao, Y. Wang, J. Chen, D. Jiang, X. Zhang, Q. Tian, and M. Wang, “Swin-Unet: Unet-like pure transformer for medical image segmentation,” in Computer Vision – ECCV 2022 Workshops. ECCV 2022, L. Karlinsky, T. Michaeli, and K. Nishino, eds., vol. 13803 of Lecture Notes in Computer Science,
 pp. 205–218. Springer International Publishing, 2022. [arXiv:2105.05537](https://arxiv.org/abs/2105.05537).
