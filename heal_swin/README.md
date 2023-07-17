@@ -108,7 +108,7 @@ For instance, in order to launch an array job to perform all evaluations on a HE
 inside `run_config`.
 
 ## Reproducing runs from the paper
-In order to reproduce the numbers reported in the paper (XXX add arXiv link XXX), use the following commands.
+In order to reproduce the numbers reported in the paper “HEAL-SWIN: A Vision Transformer On The Sphere” [arXiv:2307.07313](http://arxiv.org/abs/2307.07313), use the following commands.
 
 ### Segmentation
 The config files for semantic segmentation on various datasets are available in `run_configs/segmentation`. As described above, SWIN runs are configured in `swin_XX_train_run_config` and HEAL-SWIN runs are configured in `swin_hp_XX_train_run_config.py`. The dataset `XX` can be one of
