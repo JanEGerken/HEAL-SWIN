@@ -32,6 +32,8 @@ class WoodscapeHPSemanticImagesDataset(WoodscapeDataset):
         rotate_pole=False,
         base_pix=8,
         woodscape_version=None,
+        training_data_fraction=1.0,
+        data_fraction_seed=42,
     ):
         assert isnsideok(nside)
         assert 1 <= base_pix <= 12
@@ -75,6 +77,8 @@ class WoodscapeHPSemanticImagesDataset(WoodscapeDataset):
             part=part,
             shuffle_train_val_split=shuffle_train_val_split,
             woodscape_version=woodscape_version,
+            training_data_fraction=training_data_fraction,
+            data_fraction_seed=data_fraction_seed,
         )
 
         self.names = [os.path.splitext(file)[0] for file in self.file_names]
@@ -119,6 +123,8 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
         s2_bkgd_class=0,
         rotate_pole=False,
         woodscape_version=None,
+        training_data_fraction=1.0,
+        data_fraction_seed=42,
     ):
         assert isnsideok(nside)
         assert 1 <= base_pix <= 12
@@ -134,6 +140,8 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
             rotate_pole=rotate_pole,
             shuffle_train_val_split=shuffle_train_val_split,
             woodscape_version=woodscape_version,
+            training_data_fraction=training_data_fraction,
+            data_fraction_seed=data_fraction_seed,
         )
 
         if isinstance(samples, float):  # samples is fraction of dataset to take
@@ -231,6 +239,8 @@ class WoodscapeHPSegmentationDataModule(LightningDataModule):
         manual_overfit_batches,
         seed,
         version,
+        training_data_fraction,
+        data_fraction_seed,
     ):
 
         assert s2_bkgd_class in range(11)
@@ -262,6 +272,8 @@ class WoodscapeHPSegmentationDataModule(LightningDataModule):
             "rotate_pole": rotate_pole,
             "shuffle_train_val_split": shuffle_train_val_split,
             "woodscape_version": self.woodscape_version,
+            "training_data_fraction": training_data_fraction,
+            "data_fraction_seed": data_fraction_seed,
         }
         self.train_dataset = WoodscapeHPSemanticImagesDataset(part="train", **dataset_kwargs)
         self.val_dataset = WoodscapeHPSemanticImagesDataset(part="val", **dataset_kwargs)

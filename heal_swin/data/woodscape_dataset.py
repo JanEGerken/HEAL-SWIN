@@ -14,6 +14,8 @@ class WoodscapeDataset(Dataset):
         padding=[0, 0, 0, 0],
         shuffle_train_val_split=True,
         woodscape_version=None,
+        training_data_fraction=1.0,
+        data_fraction_seed=42,
     ):
         super().__init__()
         self.woodscape_version = woodscape_version
@@ -42,6 +44,9 @@ class WoodscapeDataset(Dataset):
             print(f"Unknown part {part}, set to 'train' or 'val'", file=sys.stderr)
             sys.exit(1)
         self.paths = self.paths[min_idx : max_idx + 1]
+        if part == "train":
+            self.take_subset_of_paths(training_data_fraction, data_fraction_seed)
+
         self.update_paths()
 
     def get_paths(self):
@@ -81,6 +86,16 @@ class WoodscapeDataset(Dataset):
             r = np.random.RandomState(42)
             idcs = r.permutation(len(self.paths))
             self.paths = np.array(self.paths)[idcs]
+
+    def take_subset_of_paths(self, fraction, seed):
+        """Take a `fraction` of the paths for the training data. This has been sorted and shuffled before.
+        Different subsets can be obtained using different `seed`s.
+
+        Should be used only for training data.
+        """
+        r = np.random.RandomState(seed)
+        subset_len = np.ceil(len(self.paths) * fraction).astype(int)
+        self.paths = self.paths[r.permutation(len(self.paths))][0:subset_len]
 
     def update_paths(self):
         """Call this function after paths have been set to new values"""
