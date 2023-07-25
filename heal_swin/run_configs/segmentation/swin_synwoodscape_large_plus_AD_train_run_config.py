@@ -47,11 +47,11 @@ def get_train_run_config():
     )
     model_config = WoodscapeSegmenterSwinConfig(
         swin_transformer_config=SwinTransformerConfig(
-            window_size=[8],
+            window_size=8,
             drop_rate=0.1,
             attn_drop_rate=0.1,
-            patch_size=[2],
-            shift_size=[2],
+            patch_size=2,
+            shift_size=2,
             embed_dim=96,
             depths=[2, 2, 6, 2],
             num_heads=[3, 6, 12, 24],
