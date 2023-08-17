@@ -57,7 +57,9 @@ class WoodscapeDataset(Dataset):
             sys.exit(1)
 
         ext = self.get_extension()
-        ext_in_root_dir = [entry.path for entry in os.scandir(root_dir) if ext in entry.name]
+        ext_in_root_dir = [
+            entry.path for entry in os.scandir(root_dir) if ext in entry.name
+        ]
         fv = [fv_img for fv_img in ext_in_root_dir if "FV" in fv_img]
         rv = [rv_img for rv_img in ext_in_root_dir if "RV" in rv_img]
         mvl = [mvl_img for mvl_img in ext_in_root_dir if "MVL" in mvl_img]
@@ -103,7 +105,9 @@ class WoodscapeDataset(Dataset):
             if not os.path.isfile(path):
                 print(f"Could not find file {path}", file=sys.stderr)
                 sys.exit(1)
-        self.file_names = np.array([os.path.basename(file_name) for file_name in self.paths])
+        self.file_names = np.array(
+            [os.path.basename(file_name) for file_name in self.paths]
+        )
 
     def __len__(self):
         return len(self.paths)

@@ -37,11 +37,11 @@ The `SingleModelTrainRun` dataclass contains options for the training, data and 
 
 The `run_configs` directory contains the following training config files
 
-- `default_train_run_config.py`: Traines with default parameters, i.e. on healpix-projected data with a HEAL-SWIN model
-- `segmentation/swin_XX_train_run_config.py`: Traines a SWIN transformer on the flat segmentation masks in the dataset XX
-- `segmentation/swin_hp_XX_train_run_config.py`: Traines a HEAL-SWIN transformer on the spherical segmentation masks in the dataset XX
-- `depth_estimation/depth_swin_synwoodscap_train_run_config.py`: Traines a SWIN transformer on flat SynWoodScapes fisheye depth maps
-- `depth_estimation/depth_swin_hp_synwoodscape_train_run_config.py`: Traines a HEAL-SWIN transformer on spherical SynWoodScape fisheye depth maps
+- `default_train_run_config.py`: Trains with default parameters, i.e. on healpix-projected data with a HEAL-SWIN model
+- `segmentation/swin_XX_train_run_config.py`: Trains a SWIN transformer on the flat segmentation masks in the dataset XX
+- `segmentation/swin_hp_XX_train_run_config.py`: Trains a HEAL-SWIN transformer on the spherical segmentation masks in the dataset XX
+- `depth_estimation/depth_swin_synwoodscap_train_run_config.py`: Trains a SWIN transformer on flat SynWoodScapes fisheye depth maps
+- `depth_estimation/depth_swin_hp_synwoodscape_train_run_config.py`: Trains a HEAL-SWIN transformer on spherical SynWoodScape fisheye depth maps
 
 For further details on how to reproduce the runs in the paper, see the section below.
 
@@ -95,10 +95,10 @@ Evaluation config files are python modules which need to contain two functions w
 
 The `EvaluateConfig` dataclass contains options for the checkpoint to be evaluated, the specific evaluations to run, the training configuration used and the data on which to evaluate. In particular, it allows for the specification of a prediction writer which are used for more elaborate evaluations, as e.g. on masked and projected versions of the data. A list of available segmentation prediction writers can be found in the `get_pred_writer` functions of the flat data module in `data/segmentation/flat_datamodule.py` and the HEALPix data module in `data/segmentation/hp_datasets.py` and correspondingly for prediction writers for depth estimation. For more details, please refer to `evaluation/evaluate_config.py` and the data modules directly. The `PLConfig` dataclass encapsulates the PyTorch Lightning options which are used for the evaluation run.
 
-The evaluation config files in `run_configs` all load the training, data and model configuration as well as the `PLConfig` instance from the saved checkpoint. They perform the evaluation on the best logged epoch and read the MLflow run id from the `RUN_ID` environment varibale. The evaluation configuration files available are
+The evaluation config files in `run_configs` all load the training, data and model configuration as well as the `PLConfig` instance from the saved checkpoint. They perform the evaluation on the best logged epoch and read the MLflow run id from the `RUN_ID` environment variable. The evaluation configuration files available are
 
-- `default_evaluate_run_config.py`: Performes an evaluation with default parameters, similar to the one performed after training when `eval_after_train` is set to `True`
-- `segmentation/evaluate_all_config.py`: Performes a number of different evaluations for segmentation depending on the `SLURM_ARRAY_TASK_ID` environment variable. This file is desigend to be run as a slurm array job to run all implemented evaluations for semantic segmentation on a praticular checkpoint in parallel. For an evaluation of a flat model, task ids 0-4 are admissible, for a HEALPix model, task ids 0-5 are admissible.
+- `default_evaluate_run_config.py`: Performs an evaluation with default parameters, similar to the one performed after training when `eval_after_train` is set to `True`
+- `segmentation/evaluate_all_config.py`: Performs a number of different evaluations for segmentation depending on the `SLURM_ARRAY_TASK_ID` environment variable. This file is designed to be run as a slurm array job to run all implemented evaluations for semantic segmentation on a particular checkpoint in parallel. For an evaluation of a flat model, task ids 0-4 are admissible, for a HEALPix model, task ids 0-5 are admissible.
 - `depth_estimation/evaluate_all_depth_config.py`: Similar to `evaluate_all_config.py`, but evaluates depth estimation checkpoints. For an evaluation of a flat model, task ids 0-4 are admissible, for a HEALPix model, task ids 0-5 are admissible.
 
 For instance, in order to launch an array job to perform all evaluations on a HEAL-SWIN checkpoint with a segmentation model, run
@@ -111,11 +111,13 @@ inside `run_config`.
 In order to reproduce the numbers reported in the paper “HEAL-SWIN: A Vision Transformer On The Sphere” [arXiv:2307.07313](http://arxiv.org/abs/2307.07313), use the following commands.
 
 ### Segmentation
-The config files for semantic segmentation on various datasets are available in `run_configs/segmentation`. As described above, SWIN runs are configured in `swin_XX_train_run_config` and HEAL-SWIN runs are configured in `swin_hp_XX_train_run_config.py`. The dataset `XX` can be one of
+The config files for semantic segmentation on various datasets are available in `run_configs/segmentation`. As described above, SWIN runs are configured in `swin_XX_{data_efficiency_}train_run_config` and HEAL-SWIN runs are configured in `swin_hp_XX_{data_efficiency_}train_run_config.py`. The dataset `XX` can be one of
 
 - `woodscape` for the WoodScape dataset with the ten classes `void`, `road`, `lanemarks`, `curb`, `person`, `rider`, `vehicles`, `bicycle`, `motorcycle` and `traffic_sign`
 - `synwoodscape_large` for a selection of the dominant classes `void`, `building`, `road line`, `road`, `sidewalk`, `four-wheeler vehicle`, `sky` and `ego-vehicle` from the SynWoodScape dataset
-- `synwoodscape_large_plus_AD` for a selection of the domaninant plus autonomous-driving related classes `void`, `building`, `pedestrian`, `road line`, `road`, `sidewalk`, `four-wheeler vehicle`, `traffic sign`, `sky`, `traffic light`, `two-wheeler vehicle` and `ego-vehicle` from the SynWoodScape dataset
+- `synwoodscape_large_plus_AD` for a selection of the dominant plus autonomous-driving related classes `void`, `building`, `pedestrian`, `road line`, `road`, `sidewalk`, `four-wheeler vehicle`, `traffic sign`, `sky`, `traffic light`, `two-wheeler vehicle` and `ego-vehicle` from the SynWoodScape dataset.
+
+The option `data_efficiency_` can be inserted after the dataset to train the same model on multiple subsets of the available training data. These multiple training runs are started as slurm array jobs.
 
 After the training has completed, evaluate the segmentation runs with
 

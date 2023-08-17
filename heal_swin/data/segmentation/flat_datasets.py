@@ -131,7 +131,9 @@ class WoodscapeSemanticImagesCalibrationDataset(Dataset):
     def __init__(self, crop_green=False, size=None, *args, **kwargs):
         super().__init__()
         self.imgs_dataset = WoodscapeImagesDataset(crop_green, *args, **kwargs)
-        self.names = [os.path.splitext(img_file)[0] for img_file in self.imgs_dataset.file_names]
+        self.names = [
+            os.path.splitext(img_file)[0] for img_file in self.imgs_dataset.file_names
+        ]
         self.file_names = self.imgs_dataset.file_names
 
         # set up calibration infos with the same files as images dataset

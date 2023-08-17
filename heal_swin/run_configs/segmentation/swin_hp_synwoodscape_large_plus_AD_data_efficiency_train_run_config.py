@@ -1,7 +1,7 @@
 #!/usr/bin/env -S python3 -u
 # fmt: off
 #SBATCH -t 7-00:00:00  # noqa: E265
-#SBATCH -o ../../../slurm/slurm-%j.out  # for array jobs, this should be slurm-%A_%a.out # noqa: E265
+#SBATCH -o ../../../slurm/slurm-%A_%a.out  # noqa: E265
 # this is needed to prevent black from formatting the above SBATCH comments...
 dummy="dummy"  # noqa: E225
 # fmt: on
@@ -10,39 +10,40 @@ import os  # noqa: E402
 import subprocess  # noqa: E402
 from pathlib import Path  # noqa: E402
 
-import argparse
+#######################################################################
+# Run this file as an array job.
+# sbatch -a 0-8 swin_hp_synwoodscape_large_plus_AD_data_efficiency_train_run_config.py
+
+# 8 is len(TRAINING_DATA_FRACTIONS) - 1
+#######################################################################
+
 import math
 
-def get_argparser_for_config_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--training_data_fraction",
-        type=float,
-        default=0.1,
-        help="Fraction of training data used.",
-    )
-    parser.add_argument(
-        "--data_fraction_seed",
-        type=int,
-        default=2,
-        help="Seed for determining subset of training data.",
-    )
+TRAINING_DATA_FRACTIONS = [0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.0]
+DATA_FRACTION_SEED = 2  # 3
 
-    return parser
 
-def get_train_run_config(training_data_fraction=0.1, data_fraction_seed=2, **kwargs):
+def get_train_run_config():
     from heal_swin.training.train_config import SingleModelTrainRun, TrainConfig
     from heal_swin.data.data_config import WoodscapeHPConfig, WoodscapeCommonConfig
     from heal_swin.models_lightning.segmentation.model_lightning_swin_hp import (
         WoodscapeSegmenterSwinHPConfig,
     )
-    from heal_swin.models_torch.swin_hp_transformer import SwinHPTransformerConfig, UnetDecoder
+    from heal_swin.models_torch.swin_hp_transformer import (
+        SwinHPTransformerConfig,
+        UnetDecoder,
+    )
     from heal_swin.training.optimizer import OptimizerConfig
 
-    if "SLURM_JOB_ID" in os.environ:
-        job_id = os.environ["SLURM_JOB_ID"]
-    else:
-        job_id = "no_job_id"
+    task_id = int(os.environ.get("SLURM_ARRAY_TASK_ID", "0"))
+    job_id = f"{os.environ.get('SLURM_ARRAY_JOB_ID', 'no_job_id')}_{task_id}"
+
+    assert task_id < len(
+        TRAINING_DATA_FRACTIONS
+    ), f"Invalid ARRAY_TASK_ID: {task_id} >= {len(TRAINING_DATA_FRACTIONS)} (len(TRAINING_DATA_FRACTIONS))"
+
+    training_data_fraction = TRAINING_DATA_FRACTIONS[task_id]
+    data_fraction_seed = DATA_FRACTION_SEED
 
     train_config = TrainConfig(
         job_id=job_id,
@@ -60,7 +61,7 @@ def get_train_run_config(training_data_fraction=0.1, data_fraction_seed=2, **kwa
             train_worker=5,
             val_worker=5,
             training_data_fraction=training_data_fraction,
-            data_fraction_seed=data_fraction_seed
+            data_fraction_seed=data_fraction_seed,
         ),
         input_nside=256,
         input_base_pix=8,
@@ -107,8 +108,11 @@ def get_train_run_config(training_data_fraction=0.1, data_fraction_seed=2, **kwa
     return SingleModelTrainRun(train=train_config, data=data_config, model=model_config)
 
 
-def get_pl_config(training_data_fraction=0.1, **kwargs):
+def get_pl_config():
     from heal_swin.training.train_config import PLConfig
+
+    task_id = int(os.environ.get("SLURM_ARRAY_TASK_ID", "0"))
+    training_data_fraction = TRAINING_DATA_FRACTIONS[task_id]
 
     return PLConfig(
         max_epochs=math.ceil(500 / training_data_fraction),
@@ -117,7 +121,7 @@ def get_pl_config(training_data_fraction=0.1, **kwargs):
     )
 
 
-def main(raw_args=None):
+def main():
     this_path = str(Path(__file__).absolute())
 
     if "SLURM_SUBMIT_DIR" in os.environ:
@@ -130,11 +134,6 @@ def main(raw_args=None):
     command += ["--env", "singularity"]
     command += ["train"]
     command += ["--config_path", this_path]
-
-    parser = argparse.ArgumentParser()
-    _, unknown = parser.parse_known_args(raw_args)
-
-    command += unknown
 
     print(" ".join(command))
 
