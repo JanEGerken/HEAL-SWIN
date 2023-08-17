@@ -195,8 +195,8 @@ def project_depth_img_points_to_s2_cached(
     u = u * def_width / width
     v = v * def_height / height
 
-    u = u - cx_offset - width / 2 + 0.5
-    v = (v - cy_offset - height / 2 + 0.5) / aspect_ratio
+    u = u - cx_offset - def_width / 2 + 0.5
+    v = (v - cy_offset - def_height / 2 + 0.5) / aspect_ratio
 
     rho = np.sqrt(u**2 + v**2)
     phi = np.arctan2(v, u)
