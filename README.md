@@ -71,10 +71,10 @@ Available tasks are:
 - `resume` to resume a training run
 - `evaluate` to evaluate a trained network
 - `start-mlflow-server` to start an HTTP MLflow server for logging
-- `test-repo` to run integration tests (traines multiple small networks and evaluates them)
+- `test-repo` to run integration tests (trains multiple small networks and evaluates them)
 - `format-code` to run the code formatter
 
-The `train`, `resume` and `evaluate` tasks just run the recpective scripts in `heal_swin` inside the specified environment, they are documented there. The task-specific arguments are in these cases the arguments of the respective scripts.
+The `train`, `resume` and `evaluate` tasks just run the respective scripts in `heal_swin` inside the specified environment, they are documented there. The task-specific arguments are in these cases the arguments of the respective scripts.
 
 The `start-mlflow-server` task accepts the following arguments:
 - `--backend`, default `sqlite`: can be either `sqlite` or `filesystem` and specifies whether an SQLite server should be used for logging or the filesystem (much slower)
