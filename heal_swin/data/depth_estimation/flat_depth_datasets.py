@@ -74,7 +74,7 @@ class WoodscapeDepthDataset(Dataset):
         data_transform=None,
         mask_background=False,
         normalize_data=None,
-        interpolation_mode ="nearest",
+        interpolation_mode="nearest",
         *args,
         **kwargs,
     ):
@@ -97,13 +97,15 @@ class WoodscapeDepthDataset(Dataset):
         self.img_transform = utils.id if size is None else tv.transforms.Resize(size)
         self.interpolation_modes = {
             "nearest": tv.transforms.InterpolationMode.NEAREST,
-            "bilinear":tv.transforms.InterpolationMode.BILINEAR
+            "bilinear": tv.transforms.InterpolationMode.BILINEAR,
         }
         self.interpolation_mode = interpolation_mode
         self.mask_transform = (
             utils.id
             if size is None
-            else tv.transforms.Resize(size, interpolation=self.interpolation_modes[self.interpolation_mode])
+            else tv.transforms.Resize(
+                size, interpolation=self.interpolation_modes[self.interpolation_mode]
+            )
         )
         self.padding = tv.transforms.Pad(kwargs.get("padding", [0, 0, 0, 0]))
 
@@ -211,13 +213,15 @@ class WoodscapeDepthImagesCalibrationDataset(Dataset):
         self.img_transform = utils.id if size is None else tv.transforms.Resize(size)
         self.interpolation_modes = {
             "nearest": tv.transforms.InterpolationMode.NEAREST,
-            "bilinear":tv.transforms.InterpolationMode.BILINEAR
+            "bilinear": tv.transforms.InterpolationMode.BILINEAR,
         }
         self.interpolation_mode = interpolation_mode
         self.mask_transform = (
             utils.id
             if size is None
-            else tv.transforms.Resize(size, interpolation=self.interpolation_modes[self.interpolation_mode])
+            else tv.transforms.Resize(
+                size, interpolation=self.interpolation_modes[self.interpolation_mode]
+            )
         )
         self.padding = tv.transforms.Pad(kwargs.get("padding", [0, 0, 0, 0]))
         self.mask_background = mask_background

@@ -149,9 +149,7 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
             if part == "train":
                 train_share = base_train_share * samples
             elif part == "val":
-                train_share = base_train_share + (
-                    (1 - samples) * (1 - base_train_share)
-                )
+                train_share = base_train_share + ((1 - samples) * (1 - base_train_share))
         elif isinstance(samples, int):
             dummy_ds = WoodscapeHPSemanticImagesDataset(
                 part="train", train_share=1.0, **dataset_kwargs
@@ -165,9 +163,7 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
             elif part == "val":
                 # set train_share so that validation data are last 'samples' samples
                 train_share = 1 - samples / total_imgs
-            if (
-                samples == -1
-            ):  # special case for overfitting on a few samples: select everything
+            if samples == -1:  # special case for overfitting on a few samples: select everything
                 train_share = 1.0
                 part = "train"
 
@@ -175,14 +171,12 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
             part=part, train_share=train_share, **dataset_kwargs
         )
         # take all the data for flat images and calibration, the matching is done in __getitem__
-        self.imgs_masks_cal_dataset = (
-            flat_datasets.WoodscapeSemanticImagesCalibrationDataset(
-                crop_green=crop_green,
-                cam_pos=cam_pos,
-                train_share=0,
-                part="val",
-                woodscape_version=woodscape_version,
-            )
+        self.imgs_masks_cal_dataset = flat_datasets.WoodscapeSemanticImagesCalibrationDataset(
+            crop_green=crop_green,
+            cam_pos=cam_pos,
+            train_share=0,
+            part="val",
+            woodscape_version=woodscape_version,
         )
 
     def __len__(self):
@@ -191,9 +185,7 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
     def __getitem__(self, idx):
         hp_img, hp_mask = self.hp_imgs_masks_dataset[idx]
         hp_name = os.path.splitext(self.hp_imgs_masks_dataset.file_names[idx])[0]
-        img, mask, cal_info, name = self.imgs_masks_cal_dataset.get_item_by_name(
-            hp_name
-        )
+        img, mask, cal_info, name = self.imgs_masks_cal_dataset.get_item_by_name(hp_name)
 
         assert name == hp_name
 
@@ -216,12 +208,8 @@ class WoodscapeHPSemanticImagesPredictDataset(Dataset):
         """collate_fn to aggregate samples into batches, to be used with PyTorch dataloaders"""
 
         batch = {}
-        batch["hp_imgs"] = torch.stack(
-            [torch.from_numpy(sample["hp_img"]) for sample in data]
-        )
-        batch["hp_masks"] = torch.stack(
-            [torch.from_numpy(sample["hp_mask"]) for sample in data]
-        )
+        batch["hp_imgs"] = torch.stack([torch.from_numpy(sample["hp_img"]) for sample in data])
+        batch["hp_masks"] = torch.stack([torch.from_numpy(sample["hp_mask"]) for sample in data])
         batch["imgs"] = torch.stack([sample["img"] for sample in data])
         batch["masks"] = torch.stack([sample["mask"] for sample in data])
         batch["cal_infos"] = [sample["cal_info"] for sample in data]
@@ -286,12 +274,8 @@ class WoodscapeHPSegmentationDataModule(LightningDataModule):
             "training_data_fraction": training_data_fraction,
             "data_fraction_seed": data_fraction_seed,
         }
-        self.train_dataset = WoodscapeHPSemanticImagesDataset(
-            part="train", **dataset_kwargs
-        )
-        self.val_dataset = WoodscapeHPSemanticImagesDataset(
-            part="val", **dataset_kwargs
-        )
+        self.train_dataset = WoodscapeHPSemanticImagesDataset(part="train", **dataset_kwargs)
+        self.val_dataset = WoodscapeHPSemanticImagesDataset(part="val", **dataset_kwargs)
         del dataset_kwargs["train_share"]
         pred_samples = -1 if self.overfit_batches > 0 else pred_samples
         self.pred_dataset = WoodscapeHPSemanticImagesPredictDataset(
@@ -308,9 +292,7 @@ class WoodscapeHPSegmentationDataModule(LightningDataModule):
             # this also means that the same seed will always select the same images
             rand_gen = torch.Generator()
             rand_gen.manual_seed(seed)
-            self.train_idcs = torch.randperm(
-                len(self.train_dataset), generator=rand_gen
-            )[:samples]
+            self.train_idcs = torch.randperm(len(self.train_dataset), generator=rand_gen)[:samples]
 
     def get_train_overfit_names(self):
         train_names = [self.train_dataset.file_names[idx] for idx in self.train_idcs]

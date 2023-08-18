@@ -18,9 +18,7 @@ class DataCommonConfig:
     )
 
     def __post_init__(self):
-        assert (
-            0.0 < self.training_data_fraction <= 1.0
-        ), "training_data_fraction not in (0.0, 1.0]"
+        assert 0.0 < self.training_data_fraction <= 1.0, "training_data_fraction not in (0.0, 1.0]"
 
 
 @dataclass
@@ -66,9 +64,7 @@ class WoodscapeDepthCommonConfig:
 @dataclass
 class WoodscapeDepthFlatConfig:
     common: WoodscapeCommonConfig = field(default_factory=WoodscapeCommonConfig)
-    common_depth: WoodscapeDepthCommonConfig = field(
-        default_factory=WoodscapeDepthCommonConfig
-    )
+    common_depth: WoodscapeDepthCommonConfig = field(default_factory=WoodscapeDepthCommonConfig)
     pred_part: Literal["train", "val"] = "val"  # on which part of the data to predict
     input_bandwidth: int = 64
     padding: List[int] = field(default_factory=lambda: [0, 0, 0, 0])

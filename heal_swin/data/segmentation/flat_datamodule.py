@@ -53,9 +53,7 @@ class WoodscapeSemanticImagesPredictDataset(Dataset):
             if part == "train":
                 train_share = base_train_share * samples
             elif part == "val":
-                train_share = base_train_share + (
-                    (1 - samples) * (1 - base_train_share)
-                )
+                train_share = base_train_share + ((1 - samples) * (1 - base_train_share))
         elif isinstance(samples, int):
             dummy_ds = flat_datasets.WoodscapeSemanticImagesDataset(
                 part="train", train_share=1.0, **dataset_kwargs
@@ -69,17 +67,13 @@ class WoodscapeSemanticImagesPredictDataset(Dataset):
             elif part == "val":
                 # set train_share so that validation data are last 'samples' samples
                 train_share = 1 - samples / total_imgs
-            if (
-                samples == -1
-            ):  # special case for overfitting on a few samples: select everything
+            if samples == -1:  # special case for overfitting on a few samples: select everything
                 train_share = 1.0
                 part = "train"
 
         dataset_kwargs["train_share"] = train_share
         dataset_kwargs["part"] = part
-        self.transf_sem_img_dataset = flat_datasets.WoodscapeSemanticImagesDataset(
-            **dataset_kwargs
-        )
+        self.transf_sem_img_dataset = flat_datasets.WoodscapeSemanticImagesDataset(**dataset_kwargs)
         dataset_kwargs["size"] = None  # unresized images
         self.sem_img_dataset = flat_datasets.WoodscapeSemanticImagesCalibrationDataset(
             **dataset_kwargs
@@ -126,12 +120,8 @@ class WoodscapeSemanticImagesPredictDataset(Dataset):
         """collate_fn to aggregate samples into batches, to be used with PyTorch dataloaders"""
 
         batch = {}
-        batch["hp_imgs"] = torch.stack(
-            [torch.from_numpy(sample["hp_img"]) for sample in data]
-        )
-        batch["hp_masks"] = torch.stack(
-            [torch.from_numpy(sample["hp_mask"]) for sample in data]
-        )
+        batch["hp_imgs"] = torch.stack([torch.from_numpy(sample["hp_img"]) for sample in data])
+        batch["hp_masks"] = torch.stack([torch.from_numpy(sample["hp_mask"]) for sample in data])
         batch["s2_imgs"] = torch.stack([sample["s2_img"] for sample in data])
         batch["s2_masks"] = torch.stack([sample["s2_mask"] for sample in data])
         batch["imgs"] = torch.stack([sample["img"] for sample in data])
@@ -220,14 +210,10 @@ class WoodscapeFlatSegmentationDataModule(LightningDataModule):
             # this also means that the same seed will always select the same images
             rand_gen = torch.Generator()
             rand_gen.manual_seed(seed)
-            self.train_idcs = torch.randperm(
-                len(self.train_dataset), generator=rand_gen
-            )[:samples]
+            self.train_idcs = torch.randperm(len(self.train_dataset), generator=rand_gen)[:samples]
 
     def get_train_overfit_names(self):
-        train_names = [
-            self.train_dataset.imgs_dataset.file_names[idx] for idx in self.train_idcs
-        ]
+        train_names = [self.train_dataset.imgs_dataset.file_names[idx] for idx in self.train_idcs]
         train_names.sort()
         return train_names
 
