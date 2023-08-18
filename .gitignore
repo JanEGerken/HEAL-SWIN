@@ -18,6 +18,9 @@ mlp_cache
 compute_environment/current_environment.py
 layer_visualizations
 equivariance_tests
+.vscode/*
+scratchbooks/*
+heal_swin/run_configs/*/DEBUG_*
 
 # zenseact-related
 zenseact/*

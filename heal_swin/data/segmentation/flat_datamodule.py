@@ -32,6 +32,8 @@ class WoodscapeSemanticImagesPredictDataset(Dataset):
         s2_bkgd_class=0,
         rotate_pole=False,
         woodscape_version=None,
+        training_data_fraction=1.0,
+        data_fraction_seed=42,
     ):
         super().__init__()
 
@@ -42,6 +44,8 @@ class WoodscapeSemanticImagesPredictDataset(Dataset):
             "padding": padding,
             "shuffle_train_val_split": shuffle_train_val_split,
             "woodscape_version": woodscape_version,
+            "training_data_fraction": training_data_fraction,
+            "data_fraction_seed": data_fraction_seed,
         }
 
         if isinstance(samples, float):  # samples is fraction of dataset to take
@@ -151,6 +155,8 @@ class WoodscapeFlatSegmentationDataModule(LightningDataModule):
         manual_overfit_batches,
         seed,
         version,
+        training_data_fraction,
+        data_fraction_seed,
     ):
         super().__init__()
         self.batch_size = batch_size
@@ -175,6 +181,8 @@ class WoodscapeFlatSegmentationDataModule(LightningDataModule):
             "size": size,
             "shuffle_train_val_split": shuffle_train_val_split,
             "woodscape_version": self.woodscape_version,
+            "training_data_fraction": training_data_fraction,
+            "data_fraction_seed": data_fraction_seed,
         }
 
         dataset_kwargs["padding"] = padding
