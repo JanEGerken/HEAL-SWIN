@@ -31,7 +31,7 @@ Although it is recommended to run the code inside the singularity/apptainer cont
     pip3 install --upgrade pip
     pip3 install -e .[test,formatting,dev]
 	
-in the root directory. This will also add the root directory to the Python path as required. In order to compute the Chamfer distance for the depth estimation task, PyTorch3D in version 0.7.2 is required and has to be installed separately via
+in the root directory. This will require Python 3.8 which can e.g. be installed using Conda. By installing in editable mode (`-e`), this will also add the root directory to the Python path as required. In order to compute the Chamfer distance for the depth estimation task, PyTorch3D in version 0.7.2 is required and has to be installed separately via
 
     FORCE_CUDA=1 pip3 install git+https://github.com/facebookresearch/pytorch3d.git@3145dd4d16edaceb394838364b8e87a440f83c10
 	

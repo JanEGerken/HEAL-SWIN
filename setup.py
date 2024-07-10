@@ -6,7 +6,9 @@ setup(
     version="0.1",
     authors=["Jan Gerken", "Oscar Carlsson", "Hampus Linander", "Heiner Spieß"],
     description="Original implementation of HEAL-SWIN: A vision transformer on the sphere",
-    packages=find_packages(include=["heal_swin", "heal_swin.*"]),
+    packages=find_packages(
+        include=["compute_environment", "compatibility", "heal_swin", "heal_swin.*"]
+    ),
     install_requires=[
         "astropy==5.1",
         "chamfer-distance @ git+https://github.com/otaheri/"
