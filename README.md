@@ -92,18 +92,22 @@ O. Carlsson, J. E. Gerken, H. Linander, H. Spieß, F. Ohlsson, C. Petersson, and
 
 If you use this code, please cite
 ```
-@article{carlsson2023,
+@inproceedings{carlsson2023,
   title = {{{HEAL-SWIN}}: {{A Vision Transformer On The Sphere}}},
   shorttitle = {{{HEAL-SWIN}}},
+  booktitle = {Proceedings of the {{IEEE}}/{{CVF Conference}} on {{Computer Vision}} and {{Pattern Recognition}}},
   author = {Carlsson, Oscar and Gerken, Jan E. and Linander, Hampus and Spie{\ss}, Heiner and Ohlsson, Fredrik and Petersson, Christoffer and Persson, Daniel},
   year = {2023},
   month = jul,
-  number = {arXiv:2307.07313},
   eprint = {2307.07313},
   primaryclass = {cs},
-  publisher = {{arXiv}},
-  archiveprefix = {arxiv},
+  pages = {6067--6077},
+  urldate = {2024-07-12},
+  archiveprefix = {arXiv},
+  langid = {english},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning}
 }
+
 ```
 
 
