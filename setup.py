@@ -45,6 +45,6 @@ setup(
     extras_require={
         "test": ["pytest==6.2.2"],
         "formatting": ["black==22.10.0"],
-        "dev": ["flake8==3.7.9"],
+        "dev": ["flake8==3.8.0"],
     },
 )
